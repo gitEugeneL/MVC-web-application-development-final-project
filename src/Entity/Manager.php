@@ -4,7 +4,6 @@ namespace App\Entity;
 
 use App\Repository\ManagerRepository;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
 
 
 #[ORM\Entity(repositoryClass: ManagerRepository::class)]
@@ -15,15 +14,12 @@ class Manager
     #[ORM\Column]
     private ?int $id = null;
 
-    #[Assert\NotBlank]
     #[ORM\Column(length: 50)]
     private ?string $firstName = null;
 
-    #[Assert\NotBlank]
     #[ORM\Column(length: 100)]
     private ?string $lastName = null;
 
-    #[Assert\NotBlank]
     #[ORM\Column(length: 12)]
     private ?string $phone = null;
 
