@@ -33,13 +33,15 @@ class Doctor
     #[ORM\OneToMany(mappedBy: 'doctor', targetEntity: MedicalRecord::class)]
     private Collection $medicalRecords;
 
+    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    private ?User $authUser = null;
+
 
     public function __construct()
     {
         $this->visits = new ArrayCollection();
         $this->medicalRecords = new ArrayCollection();
     }
-
 
     public function getId(): ?int
     {
@@ -132,7 +134,6 @@ class Doctor
             $this->medicalRecords->add($medicalRecord);
             $medicalRecord->setDoctor($this);
         }
-
         return $this;
     }
 
@@ -144,7 +145,17 @@ class Doctor
                 $medicalRecord->setDoctor(null);
             }
         }
+        return $this;
+    }
 
+    public function getAuthUser(): ?User
+    {
+        return $this->authUser;
+    }
+
+    public function setAuthUser(?User $authUser): self
+    {
+        $this->authUser = $authUser;
         return $this;
     }
 }

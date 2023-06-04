@@ -3,11 +3,10 @@
 namespace App\Entity;
 
 use App\Repository\PatientRepository;
-use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\Collection;
 
 #[ORM\Entity(repositoryClass: PatientRepository::class)]
 class Patient
@@ -24,12 +23,15 @@ class Patient
     private ?string $lastName = null;
 
     #[ORM\Column(type: Types::DATE_IMMUTABLE)]
-    private ?DateTimeInterface $dateOfBirth = null;
+    private ?\DateTimeImmutable $dateOfBirth = null;
+
+    #[ORM\Column]
+    private ?int $pesel = null;
 
     #[ORM\Column(length: 12)]
     private ?string $phone = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $insurance = null;
 
     #[ORM\OneToMany(mappedBy: 'patient', targetEntity: Visit::class)]
@@ -38,13 +40,15 @@ class Patient
     #[ORM\OneToMany(mappedBy: 'patient', targetEntity: MedicalRecord::class)]
     private Collection $medicalRecords;
 
+    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    private ?User $authUser = null;
+
 
     public function __construct()
     {
         $this->visits = new ArrayCollection();
         $this->medicalRecords = new ArrayCollection();
     }
-
 
     public function getId(): ?int
     {
@@ -71,17 +75,31 @@ class Patient
     public function setLastName(string $lastName): self
     {
         $this->lastName = $lastName;
+
         return $this;
     }
 
-    public function getDateOfBirth(): DateTimeInterface
+    public function getDateOfBirth(): ?\DateTimeImmutable
     {
         return $this->dateOfBirth;
     }
 
-    public function setDateOfBirth(DateTimeInterface $dateOfBirth): self
+    public function setDateOfBirth(\DateTimeImmutable $dateOfBirth): self
     {
         $this->dateOfBirth = $dateOfBirth;
+
+        return $this;
+    }
+
+    public function getPesel(): ?int
+    {
+        return $this->pesel;
+    }
+
+    public function setPesel(int $pesel): self
+    {
+        $this->pesel = $pesel;
+
         return $this;
     }
 
@@ -93,6 +111,7 @@ class Patient
     public function setPhone(string $phone): self
     {
         $this->phone = $phone;
+
         return $this;
     }
 
@@ -101,9 +120,10 @@ class Patient
         return $this->insurance;
     }
 
-    public function setInsurance(string $insurance): self
+    public function setInsurance(?string $insurance): self
     {
         $this->insurance = $insurance;
+
         return $this;
     }
 
@@ -160,6 +180,17 @@ class Patient
                 $medicalRecord->setPatient(null);
             }
         }
+        return $this;
+    }
+
+    public function getAuthUser(): ?User
+    {
+        return $this->authUser;
+    }
+
+    public function setAuthUser(?User $authUser): self
+    {
+        $this->authUser = $authUser;
         return $this;
     }
 }
