@@ -2,29 +2,35 @@
 
 namespace App\Service;
 
-
 use App\Dto\CreateManagerDto;
 use App\Dto\GetManagerDto;
 use App\Entity\Manager;
 use App\Entity\User;
+use App\Exception\ApiException;
 use App\Repository\ManagerRepository;
 use App\Repository\UserRepository;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
-class ManagerService
+
+readonly class ManagerService
 {
-    private readonly UserRepository $userRepository;
-    private readonly ManagerRepository $managerRepository;
-    public function __construct(UserRepository $userRepository, ManagerRepository $managerRepository)
+    private UserRepository $userRepository;
+    private ManagerRepository $managerRepository;
+    private ApiException $apiException;
+    public function __construct(UserRepository $userRepository, ManagerRepository $managerRepository,
+                                ApiException $apiException)
     {
         $this->userRepository = $userRepository;
         $this->managerRepository = $managerRepository;
+        $this->apiException = $apiException;
     }
 
-    public function createManager(CreateManagerDto $dto)
+    public function createManager(CreateManagerDto $dto): GetManagerDto
     {
-        if ($this->userRepository->findOneBy(['email' => $dto->getEmail()]) !== null) {}
-            // todo "This Manager already exist", 422"
-
+        if ($this->userRepository->findOneBy(['email' => $dto->getEmail()]) !== null)
+        {
+            $this->apiException->exception("This Manager already exist", 422);
+        }
         $manager = (new Manager())
             ->setFirstName($dto->getFirstName())
             ->setLastName($dto->getLastName())
@@ -44,5 +50,7 @@ class ManagerService
         $dto->setPhone($manager->getPhone());
         return $dto;
     }
-}
 
+
+
+}
