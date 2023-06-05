@@ -19,6 +19,9 @@ class Office
     #[ORM\Column]
     private ?int $number = null;
 
+    #[ORM\Column]
+    private ?bool $isAvailable = null;
+
 
     public function getId(): ?int
     {
@@ -45,5 +48,21 @@ class Office
     {
         $this->number = $number;
         return $this;
+    }
+
+    /**
+     * @return bool|null
+     */
+    public function getIsAvailable(): ?bool
+    {
+        return $this->isAvailable;
+    }
+
+    /**
+     * @param bool|null $isAvailable
+     */
+    public function setIsAvailable(?bool $isAvailable): void
+    {
+        $this->isAvailable = $isAvailable;
     }
 }
