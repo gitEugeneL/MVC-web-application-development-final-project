@@ -10,6 +10,7 @@ use App\Exception\ApiException;
 use App\Repository\ManagerRepository;
 use App\Repository\UserRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 
 readonly class ManagerService
@@ -42,15 +43,33 @@ readonly class ManagerService
 
         $this->managerRepository->save($manager, true);
 
+
+        return $this->createManagerDto($manager);
+    }
+
+
+    public function getAuthManager(UserInterface $authUser): GetManagerDto
+    {
+        $manager = $this->managerRepository
+            ->findOneBy(["authUser" => $this->userRepository
+                ->findOneBy(['email' => $authUser->getUserIdentifier()])]);
+
+        if (!$manager)
+            $this->apiException->exception("This Manager doesn't exist", 422);
+
+        return $this->createManagerDto($manager);
+    }
+
+
+    private function createManagerDto(Manager $manager): GetManagerDto
+    {
         $dto = new GetManagerDto();
         $dto->setId($manager->getId());
         $dto->setFirstName($manager->getFirstName());
         $dto->setLastName($manager->getLastName());
-        $dto->setEmail($manager->getAuthUser()->getEmail());
         $dto->setPhone($manager->getPhone());
+        $dto->setEmail($manager->getAuthUser()->getEmail());
         return $dto;
     }
-
-
 
 }

@@ -8,6 +8,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -15,7 +17,6 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 #[Route('/manager')]
 class ManagerController extends AbstractController
 {
-
     private readonly ValidatorInterface $validatorInterface;
     private readonly SerializerInterface $serializer;
     private readonly ManagerService $managerService;
@@ -42,10 +43,14 @@ class ManagerController extends AbstractController
     }
 
 
+    #[IsGranted('ROLE_MANAGER')]
+    #[Route('/info', methods: ['GET'])]
+    public function authPatient(TokenStorageInterface $tokenStorage): JsonResponse
+    {
+        $authUser = $tokenStorage->getToken()->getUser();
+        $result = $this->managerService->getAuthManager($authUser);
 
-
-
-
-
+        return $this->json($result, 200);
+    }
 }
 

@@ -10,6 +10,7 @@ use App\Exception\ApiException;
 use App\Repository\DoctorRepository;
 use App\Repository\SpecializationRepository;
 use App\Repository\UserRepository;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 class DoctorService
 {
@@ -62,6 +63,19 @@ class DoctorService
     }
 
 
+    public function getAuthDoctor(UserInterface $authUser): GetDoctorDto
+    {
+        $doctor = $this->doctorRepository
+            ->findOneBy(["authUser" => $this->userRepository
+                ->findOneBy(['email' => $authUser->getUserIdentifier()])]);
+
+        if(!$doctor)
+            $this->apiException->exception("This Doctor doesn't exist", 422);
+
+        return $this->createGetDoctorDto($doctor);
+    }
+
+
     private function createGetDoctorDto(Doctor $doctor): GetDoctorDto
     {
         $dto = new GetDoctorDto();
@@ -73,5 +87,4 @@ class DoctorService
         $dto->setSpecialization($doctor->getSpecializations()->getName());
         return $dto;
     }
-
 }

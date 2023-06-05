@@ -2,8 +2,9 @@
 
 namespace App\Controller;
 
-use App\Doctor\CreateDoctorDto;
-use App\Service\DoctorService;
+use App\Patient\CreatePatientDto;
+use App\Service\PatientService;
+use IsGrantedOneOf;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,51 +15,50 @@ use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 
-#[Route('/doctor')]
-class DoctorController extends AbstractController
+#[Route('/patient')]
+class PatientController extends AbstractController
 {
     private readonly ValidatorInterface $validatorInterface;
     private readonly SerializerInterface $serializer;
-    private readonly DoctorService $doctorService;
+    private readonly PatientService $patientService;
     public function __construct(ValidatorInterface $validatorInterface, SerializerInterface $serializer,
-                                DoctorService $doctorService)
+                                PatientService $patientService)
     {
         $this->validatorInterface = $validatorInterface;
         $this->serializer = $serializer;
-        $this->doctorService = $doctorService;
+        $this->patientService = $patientService;
     }
 
 
-    #[IsGranted('ROLE_MANAGER')]
     #[Route('/create', methods: ['POST'])]
     public function create(Request $request): JsonResponse
     {
-        $dto = $this->serializer->deserialize($request->getContent(), CreateDoctorDto::class, 'json');
+        $dto = $this->serializer->deserialize($request->getContent(), CreatePatientDto::class, 'json');
         $errors = $this->validatorInterface->validate($dto);
         if(count($errors) > 0)
             return $this->json($errors, 422);
 
-        $result = $this->doctorService->createDoctor($dto);
+        $result = $this->patientService->createPatient($dto);
         return $this->json($result, 201);
     }
 
-
-    #[IsGranted('ROLE_MANAGER')]
+    #[IsGrantedOneOf(['ROLE_DOCTOR', 'ROLE_MANAGER'])]
     #[Route('/show', methods: ['GET'])]
     public function show(): JsonResponse
     {
-        $result = $this->doctorService->showDoctors();
+        $result = $this->patientService->showPatients();
         return $this->json($result, 200);
     }
 
 
-    #[IsGranted('ROLE_DOCTOR')]
+    #[IsGranted('ROLE_PATIENT')]
     #[Route('/info', methods: ['GET'])]
     public function authPatient(TokenStorageInterface $tokenStorage): JsonResponse
     {
         $authUser = $tokenStorage->getToken()->getUser();
-        $result = $this->doctorService->getAuthDoctor($authUser);
+        $result = $this->patientService->getAuthPatient($authUser);
 
         return $this->json($result, 200);
     }
+
 }
