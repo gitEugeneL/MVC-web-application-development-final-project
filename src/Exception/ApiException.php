@@ -2,13 +2,15 @@
 
 namespace App\Exception;
 
+use JetBrains\PhpStorm\NoReturn;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class ApiException
 {
-    public function exception(string $message, int $code): void
+    #[NoReturn] public function exception(string $message, int $code): void
     {
         $exception = new JsonResponse($message, $code);
         $exception->send();
+        exit;
     }
 }

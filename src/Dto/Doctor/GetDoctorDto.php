@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Dto;
+namespace App\Doctor;
 
-class GetManagerDto
+class GetDoctorDto
 {
     private int $id;
     private string $firstName;
     private string $lastName;
     private string $email;
     private string $phone;
-
+    private string $specialization;
 
     /**
      * @return int
@@ -90,6 +90,21 @@ class GetManagerDto
     {
         $this->phone = $phone;
     }
+
+    /**
+     * @return string
+     */
+    public function getSpecialization(): string
+    {
+        return $this->specialization;
+    }
+
+    /**
+     * @param string $specialization
+     */
+    public function setSpecialization(string $specialization): void
+    {
+        $this->specialization = $specialization;
+    }
+
 }
-
-

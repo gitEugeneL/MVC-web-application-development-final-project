@@ -20,6 +20,9 @@ class CreateManagerDto
     #[Assert\NotNull]
     private string $password;
 
+    #[Assert\NotBlank]
+    #[Assert\Email]
+    private string $email;
 
     /**
      * @return string|null
@@ -100,9 +103,5 @@ class CreateManagerDto
     {
         $this->email = $email;
     }
-
-    #[Assert\NotBlank]
-    #[Assert\Email]
-    private ?string $email = null;
 }
 
