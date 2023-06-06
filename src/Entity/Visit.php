@@ -20,7 +20,10 @@ class Visit
     private ?\DateTimeInterface $date = null;
 
     #[ORM\Column(type: Types::TIME_MUTABLE)]
-    private ?\DateTimeInterface $time = null;
+    private ?\DateTimeInterface $startTime = null;
+
+    #[ORM\Column(type: Types::TIME_MUTABLE)]
+    private ?\DateTimeInterface $endTime = null;
 
     #[ORM\ManyToOne(inversedBy: 'visits')]
     private ?Patient $patient = null;
@@ -112,4 +115,38 @@ class Visit
         }
         return $this;
     }
+
+    /**
+     * @return \DateTimeInterface|null
+     */
+    public function getStartTime(): ?\DateTimeInterface
+    {
+        return $this->startTime;
+    }
+
+    /**
+     * @param \DateTimeInterface|null $startTime
+     */
+    public function setStartTime(?\DateTimeInterface $startTime): void
+    {
+        $this->startTime = $startTime;
+    }
+
+    /**
+     * @return \DateTimeInterface|null
+     */
+    public function getEndTime(): ?\DateTimeInterface
+    {
+        return $this->endTime;
+    }
+
+    /**
+     * @param \DateTimeInterface|null $endTime
+     */
+    public function setEndTime(?\DateTimeInterface $endTime): void
+    {
+        $this->endTime = $endTime;
+    }
+
+
 }

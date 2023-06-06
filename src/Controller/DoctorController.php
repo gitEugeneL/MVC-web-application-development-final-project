@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Doctor\CreateDoctorDto;
 use App\Service\DoctorService;
+use IsGrantedOneOf;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -54,11 +55,23 @@ class DoctorController extends AbstractController
 
     #[IsGranted('ROLE_DOCTOR')]
     #[Route('/info', methods: ['GET'])]
-    public function authPatient(TokenStorageInterface $tokenStorage): JsonResponse
+    public function authDoctor(TokenStorageInterface $tokenStorage): JsonResponse
     {
         $authUser = $tokenStorage->getToken()->getUser();
         $result = $this->doctorService->getAuthDoctor($authUser);
 
         return $this->json($result, 200);
     }
+
+
+    #[IsGrantedOneOf(['ROLE_PATIENT', 'ROLE_MANAGER'])]
+    #[Route('/show/{id}', methods: ['GET'])]
+    public function findBySpecialization(Request $request): JsonResponse
+    {
+        $doctors = $this->doctorService->findDoctorsBySpecialization((int) $request->get('id'));
+        return $this->json($doctors, 200);
+    }
+
+
+
 }

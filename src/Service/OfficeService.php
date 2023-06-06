@@ -58,11 +58,6 @@ class OfficeService
     }
 
 
-
-
-
-
-
     private function createGetOfficeDto(Office $office): GetOfficeDto
     {
         $dto = new GetOfficeDto();

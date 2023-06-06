@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Service\SpecializationService;
 use App\Specialization\CreateSpecializationDto;
+use IsGrantedOneOf;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -42,7 +43,7 @@ class SpecializationController extends AbstractController
     }
 
 
-    #[IsGranted('ROLE_MANAGER')]
+    #[IsGrantedOneOf(['ROLE_PATIENT', 'ROLE_MANAGER'])]
     #[Route('/show', methods: ['GET'])]
     public function show(): JsonResponse
     {

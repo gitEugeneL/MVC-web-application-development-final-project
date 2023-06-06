@@ -76,6 +76,17 @@ class DoctorService
     }
 
 
+    public function findDoctorsBySpecialization(int $specializationId): array
+    {
+        $doctors = $this->doctorRepository->findBy(['specializations' => $specializationId]);
+        $doctorsDTOs = [];
+        foreach ($doctors as $doctor) {
+            $doctorsDTOs[] = $this->createGetDoctorDto($doctor);
+        }
+        return $doctorsDTOs;
+    }
+
+
     private function createGetDoctorDto(Doctor $doctor): GetDoctorDto
     {
         $dto = new GetDoctorDto();
@@ -87,4 +98,6 @@ class DoctorService
         $dto->setSpecialization($doctor->getSpecializations()->getName());
         return $dto;
     }
+
+
 }
