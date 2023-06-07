@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Doctor\CreateDoctorDto;
+use App\Doctor\UpdateDoctorSpecializationDto;
 use App\Service\DoctorService;
 use IsGrantedOneOf;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -65,13 +66,38 @@ class DoctorController extends AbstractController
 
 
     #[IsGrantedOneOf(['ROLE_PATIENT', 'ROLE_MANAGER'])]
-    #[Route('/show/{id}', methods: ['GET'])]
+    #[Route('/show/{specializationId}', methods: ['GET'])]
     public function findBySpecialization(Request $request): JsonResponse
     {
-        $doctors = $this->doctorService->findDoctorsBySpecialization((int) $request->get('id'));
+        $doctors = $this->doctorService->findDoctorsBySpecialization((int) $request->get('specializationId'));
         return $this->json($doctors, 200);
     }
 
 
+    #[IsGranted('ROLE_MANAGER')]
+    #[Route('/add-specialization/{doctorId}', methods: ['PATCH'])]
+    public function addSpecialization(Request $request): JsonResponse
+    {
+        $dto = $this->serializer->deserialize($request->getContent(), UpdateDoctorSpecializationDto::class, 'json');
+        $errors = $this->validatorInterface->validate($dto);
+        if(count($errors) > 0)
+            return $this->json($errors, 422);
 
+        $result = $this->doctorService->updateSpecialization($dto, (int) $request->get('doctorId'));
+        return $this->json($result, 201);
+    }
+
+
+    #[IsGranted('ROLE_MANAGER')]
+    #[Route('/delete-specialization/{doctorId}', methods: ['PATCH'])]
+    public function deleteSpecialization(Request $request): JsonResponse
+    {
+        $dto = $this->serializer->deserialize($request->getContent(), UpdateDoctorSpecializationDto::class, 'json');
+        $errors = $this->validatorInterface->validate($dto);
+        if(count($errors) > 0)
+            return $this->json($errors, 422);
+
+        $result = $this->doctorService->updateSpecialization($dto, (int) $request->get('doctorId'), true);
+        return $this->json($result, 201);
+    }
 }

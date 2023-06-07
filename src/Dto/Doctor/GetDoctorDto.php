@@ -9,7 +9,7 @@ class GetDoctorDto
     private string $lastName;
     private string $email;
     private string $phone;
-    private string $specialization;
+    private array $specialization;
 
     /**
      * @return int
@@ -92,19 +92,18 @@ class GetDoctorDto
     }
 
     /**
-     * @return string
+     * @return array
      */
-    public function getSpecialization(): string
+    public function getSpecialization(): array
     {
         return $this->specialization;
     }
 
     /**
-     * @param string $specialization
+     * @param array $specialization
      */
-    public function setSpecialization(string $specialization): void
+    public function setSpecialization(array $specialization): void
     {
         $this->specialization = $specialization;
     }
-
 }

@@ -45,7 +45,7 @@ class ManagerController extends AbstractController
 
     #[IsGranted('ROLE_MANAGER')]
     #[Route('/info', methods: ['GET'])]
-    public function authPatient(TokenStorageInterface $tokenStorage): JsonResponse
+    public function authManager(TokenStorageInterface $tokenStorage): JsonResponse
     {
         $authUser = $tokenStorage->getToken()->getUser();
         $result = $this->managerService->getAuthManager($authUser);

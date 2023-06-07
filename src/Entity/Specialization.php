@@ -18,8 +18,9 @@ class Specialization
     #[ORM\Column(length: 50)]
     private ?string $name = null;
 
-    #[ORM\OneToMany(mappedBy: 'specializations', targetEntity: Doctor::class)]
+    #[ORM\ManyToMany(targetEntity: Doctor::class, mappedBy: 'specializations')]
     private Collection $doctors;
+
 
     public function __construct()
     {
@@ -54,7 +55,7 @@ class Specialization
     {
         if (!$this->doctors->contains($doctor)) {
             $this->doctors->add($doctor);
-            $doctor->setSpecializations($this);
+            $doctor->addSpecialization($this);
         }
         return $this;
     }
@@ -62,10 +63,7 @@ class Specialization
     public function removeDoctor(Doctor $doctor): self
     {
         if ($this->doctors->removeElement($doctor)) {
-            // set the owning side to null (unless already changed)
-            if ($doctor->getSpecializations() === $this) {
-                $doctor->setSpecializations(null);
-            }
+            $doctor->removeSpecialization($this);
         }
         return $this;
     }

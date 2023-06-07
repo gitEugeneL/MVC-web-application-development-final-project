@@ -24,8 +24,9 @@ class Doctor
     #[ORM\Column(length: 12)]
     private ?string $phone = null;
 
-    #[ORM\ManyToOne(inversedBy: 'doctors')]
-    private ?Specialization $specializations = null;
+    #[ORM\ManyToMany(targetEntity: Specialization::class, inversedBy: 'doctors')]
+    #[ORM\JoinTable(name: 'doctor_specialization')]
+    private ?Collection $specializations = null;
 
     #[ORM\OneToMany(mappedBy: 'doctor', targetEntity: Visit::class)]
     private Collection $visits;
@@ -39,6 +40,7 @@ class Doctor
 
     public function __construct()
     {
+        $this->specializations = new ArrayCollection();
         $this->visits = new ArrayCollection();
         $this->medicalRecords = new ArrayCollection();
     }
@@ -81,14 +83,28 @@ class Doctor
         return $this;
     }
 
-    public function getSpecializations(): ?Specialization
+    /**
+     * @return Collection<int, Specialization>
+     */
+    public function getSpecializations(): Collection
     {
         return $this->specializations;
     }
 
-    public function setSpecializations(?Specialization $specializations): self
+    public function addSpecialization(Specialization $specialization): self
     {
-        $this->specializations = $specializations;
+        if (!$this->specializations->contains($specialization)) {
+            $this->specializations->add($specialization);
+            $specialization->addDoctor($this);
+        }
+        return $this;
+    }
+
+    public function removeSpecialization(Specialization $specialization): self
+    {
+        if ($this->specializations->removeElement($specialization)) {
+            $specialization->removeDoctor($this);
+        }
         return $this;
     }
 

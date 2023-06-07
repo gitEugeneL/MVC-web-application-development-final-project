@@ -25,7 +25,7 @@ class PatientService
         $this->apiException = $apiException;
     }
 
-    public function createPatient(CreatePatientDto $dto)
+    public function createPatient(CreatePatientDto $dto): GetPatientDto
     {
         if ($this->userRepository->findOneBy(['email' => $dto->getEmail()]) !== null)
             $this->apiException->exception("This Patient already exist", 422);

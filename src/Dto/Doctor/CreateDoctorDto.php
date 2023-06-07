@@ -16,7 +16,7 @@ class CreateDoctorDto
     private string $phone;
 
     #[Assert\NotBlank]
-    private int $specializationId;
+    private array $specializationsId;
 
     #[Assert\Length(min: 4)]
     #[Assert\NotNull]
@@ -76,20 +76,21 @@ class CreateDoctorDto
     }
 
     /**
-     * @return int
+     * @return mixed
      */
-    public function getSpecializationId(): int
+    public function getSpecializationsId(): array
     {
-        return $this->specializationId;
+        return $this->specializationsId;
     }
 
     /**
-     * @param int $specializationId
+     * @param mixed $specializationsId
      */
-    public function setSpecializationId(int $specializationId): void
+    public function setSpecializationsId(array $specializationsId): void
     {
-        $this->specializationId = $specializationId;
+        $this->specializationsId = $specializationsId;
     }
+
 
     /**
      * @return string

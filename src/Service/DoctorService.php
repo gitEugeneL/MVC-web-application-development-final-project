@@ -4,6 +4,7 @@ namespace App\Service;
 
 use App\Doctor\CreateDoctorDto;
 use App\Doctor\GetDoctorDto;
+use App\Doctor\UpdateDoctorSpecializationDto;
 use App\Entity\Doctor;
 use App\Entity\User;
 use App\Exception\ApiException;
@@ -32,19 +33,29 @@ class DoctorService
         if ($this->userRepository->findOneBy(['email' => $dto->getEmail()]) !== null)
             $this->apiException->exception("This Doctor already exist", 422);
 
-        $specialization = $this->specializationRepository->find($dto->getSpecializationId());
-        if (!$specialization)
-            $this->apiException->exception("This specialization doesn't exist", 422);
+        $specializationsIds = $dto->getSpecializationsId();
+        $specializations = [];
+
+        foreach ($specializationsIds as $specializationsId) {
+            $specialization = $this->specializationRepository->find($specializationsId);
+            if (!$specialization)
+                $this->apiException->exception("Specialization id: {$specializationsId} doesn't exist", 422);
+
+            $specializations[] = $specialization;
+        }
 
         $doctor = (new Doctor())
             ->setFirstName($dto->getFirstName())
             ->setLastName($dto->getLastName())
             ->setPhone($dto->getPhone())
-            ->setSpecializations($specialization)
             ->setAuthUser((new User())
                 ->setEmail($dto->getEmail())
                 ->setPassword(password_hash($dto->getPassword(), PASSWORD_DEFAULT))
                 ->setRoles(["ROLE_DOCTOR"]));
+
+        foreach ($specializations as $specialization) {
+            $doctor->addSpecialization($specialization);
+        }
 
         $this->doctorRepository->save($doctor, true);
 
@@ -78,12 +89,45 @@ class DoctorService
 
     public function findDoctorsBySpecialization(int $specializationId): array
     {
-        $doctors = $this->doctorRepository->findBy(['specializations' => $specializationId]);
+        $specialization = $this->specializationRepository->find($specializationId);
+        if (!$specialization)
+            $this->apiException->exception("This Specialization doesn't exist", 422);
+
+        $doctors = $specialization->getDoctors();
         $doctorsDTOs = [];
         foreach ($doctors as $doctor) {
             $doctorsDTOs[] = $this->createGetDoctorDto($doctor);
         }
         return $doctorsDTOs;
+    }
+
+
+    public function updateSpecialization(UpdateDoctorSpecializationDto $dto, int $doctorId, bool $delete = false): GetDoctorDto
+    {
+        $specialization = $this->specializationRepository->find($dto->getSpecializationId());
+        if (!$specialization)
+            $this->apiException->exception("This Specialization doesn't exist", 422);
+
+        $doctor = $this->doctorRepository->find($doctorId);
+        if (!$doctor)
+            $this->apiException->exception("This Doctor doesn't exist", 422);
+
+        $doctorSpecializations = $doctor->getSpecializations();
+
+        if(!$delete) {
+            if($doctorSpecializations->contains($specialization))
+                $this->apiException->exception("This specialty has already been added", 422);
+
+            $doctor->addSpecialization($specialization);
+        }
+        if ($delete) {
+            if(!$doctorSpecializations->contains($specialization))
+                $this->apiException->exception("The doctor does not have this specialization", 422);
+
+            $doctor->removeSpecialization($specialization);
+        }
+        $this->doctorRepository->save($doctor, true);
+        return $this->createGetDoctorDto($doctor);
     }
 
 
@@ -95,9 +139,13 @@ class DoctorService
         $dto->setLastName($doctor->getLastName());
         $dto->setEmail($doctor->getAuthUser()->getEmail());
         $dto->setPhone($doctor->getPhone());
-        $dto->setSpecialization($doctor->getSpecializations()->getName());
+
+        $specializations = [];
+        foreach ($doctor->getSpecializations() as $specialization) {
+            $specializations[] = $specialization->getName();
+        }
+        $dto->setSpecialization($specializations);
+
         return $dto;
     }
-
-
 }
