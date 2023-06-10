@@ -34,13 +34,14 @@ class PatientService
             ->setFirstName($dto->getFirstName())
             ->setLastName($dto->getLastName())
             ->setDateOfBirth($dto->getDateOfBirth())
-            ->setPesel($dto->getPesel())
             ->setPhone($dto->getPhone())
             ->setInsurance($dto->getInsurance())
             ->setAuthUser((new User())
                 ->setEmail($dto->getEmail())
                 ->setPassword(password_hash($dto->getPassword(), PASSWORD_DEFAULT))
                 ->setRoles(["ROLE_PATIENT"]));
+
+        $patient->setPesel($dto->getPesel());
 
         $this->patientRepository->save($patient, true);
         return $this->createGetPatientDto($patient);

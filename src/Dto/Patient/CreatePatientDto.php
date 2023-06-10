@@ -17,7 +17,7 @@ class CreatePatientDto
     private \DateTimeImmutable $dateOfBirth;
 
     #[Assert\NotNull]
-    private int $pesel;
+    private string $pesel;
 
     #[Assert\NotNull]
     private string $phone;
@@ -83,17 +83,17 @@ class CreatePatientDto
     }
 
     /**
-     * @return int
+     * @return string
      */
-    public function getPesel(): int
+    public function getPesel(): string
     {
         return $this->pesel;
     }
 
     /**
-     * @param int $pesel
+     * @param string $pesel
      */
-    public function setPesel(int $pesel): void
+    public function setPesel(string $pesel): void
     {
         $this->pesel = $pesel;
     }

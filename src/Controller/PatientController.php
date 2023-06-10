@@ -4,8 +4,8 @@ namespace App\Controller;
 
 use App\Patient\CreatePatientDto;
 use App\Service\PatientService;
-use IsGrantedOneOf;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -42,7 +42,8 @@ class PatientController extends AbstractController
         return $this->json($result, 201);
     }
 
-    #[IsGrantedOneOf(['ROLE_DOCTOR', 'ROLE_MANAGER'])]
+
+    #[IsGranted(new Expression('is_granted("ROLE_DOCTOR") or is_granted("ROLE_MANAGER")'))]
     #[Route('/show', methods: ['GET'])]
     public function show(): JsonResponse
     {

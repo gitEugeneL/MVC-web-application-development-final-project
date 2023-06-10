@@ -5,8 +5,8 @@ namespace App\Controller;
 use App\Doctor\CreateDoctorDto;
 use App\Doctor\UpdateDoctorSpecializationDto;
 use App\Service\DoctorService;
-use IsGrantedOneOf;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -65,7 +65,7 @@ class DoctorController extends AbstractController
     }
 
 
-    #[IsGrantedOneOf(['ROLE_PATIENT', 'ROLE_MANAGER'])]
+    #[IsGranted(new Expression('is_granted("ROLE_PATIENT") or is_granted("ROLE_MANAGER")'))]
     #[Route('/show/{specializationId}', methods: ['GET'])]
     public function findBySpecialization(Request $request): JsonResponse
     {

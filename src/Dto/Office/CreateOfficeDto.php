@@ -13,9 +13,6 @@ class CreateOfficeDto
     #[Assert\NotBlank]
     private int $number;
 
-    #[Assert\NotBlank]
-    private bool $isAvailable;
-
     /**
      * @return string
      */
@@ -46,21 +43,5 @@ class CreateOfficeDto
     public function setNumber(int $number): void
     {
         $this->number = $number;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isAvailable(): bool
-    {
-        return $this->isAvailable;
-    }
-
-    /**
-     * @param bool $isAvailable
-     */
-    public function setIsAvailable(bool $isAvailable): void
-    {
-        $this->isAvailable = $isAvailable;
     }
 }

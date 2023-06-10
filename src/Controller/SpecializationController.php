@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\Service\SpecializationService;
 use App\Specialization\CreateSpecializationDto;
-use IsGrantedOneOf;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -12,6 +11,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Component\ExpressionLanguage\Expression;
 
 
 #[Route('/specialization')]
@@ -43,13 +43,11 @@ class SpecializationController extends AbstractController
     }
 
 
-    #[IsGrantedOneOf(['ROLE_PATIENT', 'ROLE_MANAGER'])]
+    #[IsGranted(new Expression('is_granted("ROLE_PATIENT") or is_granted("ROLE_MANAGER")'))]
     #[Route('/show', methods: ['GET'])]
     public function show(): JsonResponse
     {
         $result = $this->specializationService->showSpecializations();
         return $this->json($result, 200);
     }
-
-
 }

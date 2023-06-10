@@ -26,7 +26,7 @@ class Patient
     private ?\DateTimeImmutable $dateOfBirth = null;
 
     #[ORM\Column]
-    private ?int $pesel = null;
+    private ?string $pesel = null;
 
     #[ORM\Column(length: 12)]
     private ?string $phone = null;
@@ -91,16 +91,20 @@ class Patient
         return $this;
     }
 
-    public function getPesel(): ?int
+    /**
+     * @return string|null
+     */
+    public function getPesel(): ?string
     {
         return $this->pesel;
     }
 
-    public function setPesel(int $pesel): self
+    /**
+     * @param string|null $pesel
+     */
+    public function setPesel(?string $pesel): void
     {
         $this->pesel = $pesel;
-
-        return $this;
     }
 
     public function getPhone(): ?string

@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Office\CreateOfficeDto;
 use App\Service\OfficeService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -28,6 +29,7 @@ class OfficeController extends AbstractController
         $this->officeService = $officeService;
     }
 
+
     #[IsGranted('ROLE_MANAGER')]
     #[Route('/create', methods: ['POST'])]
     public function create(Request $request): JsonResponse
@@ -42,7 +44,7 @@ class OfficeController extends AbstractController
     }
 
 
-    #[IsGranted('ROLE_MANAGER')]
+    #[IsGranted(new Expression('is_granted("ROLE_DOCTOR") or is_granted("ROLE_MANAGER")'))]
     #[Route('/show', methods: ['GET'])]
     public function show(): JsonResponse
     {
@@ -51,7 +53,7 @@ class OfficeController extends AbstractController
     }
 
 
-    #[IsGranted('ROLE_MANAGER')]
+    #[IsGranted(new Expression('is_granted("ROLE_DOCTOR") or is_granted("ROLE_MANAGER")'))]
     #[Route('/update/{id}', methods: ['PATCH'])]
     public function update(Request $request): JsonResponse
     {

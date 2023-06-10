@@ -27,7 +27,7 @@ class OfficeService
         $office = new Office();
         $office->setName($dto->getName());
         $office->setNumber($dto->getNumber());
-        $office->setIsAvailable($dto->isAvailable());
+        $office->setIsAvailable(false);
 
         $this->officeRepository->save($office, true);
         return $this->createGetOfficeDto($office);

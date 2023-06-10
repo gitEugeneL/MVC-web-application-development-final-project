@@ -57,7 +57,7 @@ class VisitController extends AbstractController
             return $this->json($errors, 422);
 
         $visit = $this->visitService->createVisit($authUser, $dto);
-        return $this->json($visit, 200);
+        return $this->json($visit, 201);
     }
 
 

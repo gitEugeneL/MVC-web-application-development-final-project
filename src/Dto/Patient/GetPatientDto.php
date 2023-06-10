@@ -8,7 +8,7 @@ class GetPatientDto
     private string $firstName;
     private string $lastName;
     private \DateTimeImmutable $dateOfBirth;
-    private int $pesel;
+    private string $pesel;
     private string $email;
     private string $phone;
     private string $insurance;
@@ -79,17 +79,17 @@ class GetPatientDto
     }
 
     /**
-     * @return int
+     * @return string
      */
-    public function getPesel(): int
+    public function getPesel(): string
     {
         return $this->pesel;
     }
 
     /**
-     * @param int $pesel
+     * @param string $pesel
      */
-    public function setPesel(int $pesel): void
+    public function setPesel(string $pesel): void
     {
         $this->pesel = $pesel;
     }
