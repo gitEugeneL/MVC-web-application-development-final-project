@@ -4,6 +4,9 @@
             <router-link v-if="this.user && this.role === 'manager'" to="/manager" class="navbar-brand">
                 {{ this.role}}: {{ this.user.firstName }} {{ this.user.lastName }}
             </router-link>
+            <router-link v-if="this.user && this.role === 'patient'" to="/patient" class="navbar-brand">
+                {{ this.role}}: {{ this.user.firstName }} {{ this.user.lastName }}
+            </router-link>
             <button
                     class="navbar-toggler"
                     type="button"

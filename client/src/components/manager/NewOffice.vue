@@ -2,21 +2,27 @@
     <div v-if="isOpen" class="modal">
         <div class="modal-content">
             <span class="close" @click="closeModal">&times;</span>
-            <div>
-                <form @submit.prevent="handleSubmit">
-
-                    <h5>Add new specialization</h5>
-                    <Error v-if="error" :error="error"/>
-                    <div class="form-group">
+            <form @submit.prevent="handleSubmit">
+                <h5>Add new office</h5>
+                <Error v-if="error" :error="error"/>
+                <div class="row">
+                    <div class="col-6 form-group">
+                        <label>Number</label>
+                        <input v-model="number"
+                               type="number"
+                               class="form-control"
+                               placeholder="number">
+                    </div>
+                    <div class="col-6 form-group">
                         <label>Name</label>
-                        <input v-model="specializationName"
+                        <input v-model="name"
                                type="text"
                                class="form-control"
-                               placeholder="specialization name">
+                               placeholder="name">
                     </div>
-                    <button class="btn btn-primary btn-block">Create</button>
-                </form>
-            </div>
+                </div>
+                <button class="btn btn-primary btn-block">Create</button>
+            </form>
         </div>
     </div>
 </template>
@@ -31,7 +37,8 @@ export default {
 
     data() {
         return {
-            specializationName: '',
+            number: '',
+            name: '',
             error: ''
         }
     },
@@ -45,14 +52,17 @@ export default {
     methods: {
         async handleSubmit() {
             const data = {
-                name: this.specializationName,
-            }
+                number: this.number,
+                name: this.name,
+                isAvailable: false
+            };
             try {
-                const response = await axios.post(`${SERVER}/specialization/create`, data, {
+                const response = await axios.post(`${SERVER}/office/create`, data, {
                     headers: { Authorization: 'Bearer ' + localStorage.getItem('token') }
                 });
                 if (response.status === 201) {
-                    this.specializationName = '';
+                    this.number = '';
+                    this.name = '';
                     this.closeModal();
                 }
             } catch (error) {

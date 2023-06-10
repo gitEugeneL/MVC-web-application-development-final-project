@@ -63,5 +63,4 @@ export default {
     .auth-inner button {
         margin-bottom: 15px;
     }
-
 </style>

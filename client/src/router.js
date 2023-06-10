@@ -3,6 +3,8 @@ import AuthPage from "@/components/auth/AuthPage.vue";
 import Login from "@/components/auth/Login.vue";
 import ManagerPage from "@/components/manager/ManagerPage.vue";
 import PatientRegister from "@/components/auth/PatientRegister.vue";
+import PatientPage from "@/components/patient/PatientPage.vue";
+import NewVisit from "@/components/patient/NewVisit.vue";
 
 
 const routes = [
@@ -12,7 +14,13 @@ const routes = [
 
 
 
+
     { path: '/manager', component: ManagerPage },
+
+
+
+    { path: '/patient', component: PatientPage },
+    { path: '/patient/new-visit', component: NewVisit }
 
 
 ]

@@ -121,9 +121,6 @@ export default {
                 specializationsId: this.selectedSpecializations
             };
 
-            console.log(data);
-
-
             try {
                 await axios.post(`${SERVER}/doctor/create`, data, {
                     headers: { Authorization: 'Bearer ' + localStorage.getItem('token') }
@@ -162,8 +159,12 @@ export default {
     transition: all .3s;
 }
 
-h5 {
+h5, h6 {
     text-align: center;
+}
+
+.form-group {
+    text-align: left;
 }
 
 .close {
@@ -177,6 +178,4 @@ h5 {
     transform: scale(2);
     margin-right: 11px;
 }
-
-
 </style>

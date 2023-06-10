@@ -100,7 +100,7 @@ export default {
                 firstName: this.firstName,
                 lastName: this.lastName,
                 dateOfBirth: this.dateOfBirth,
-                pesel: parseInt(this.pesel),
+                pesel: this.pesel,
                 phone: this.phone,
                 insurance: this.insurance,
                 password: this.password,
@@ -116,7 +116,6 @@ export default {
             }
         }
     }
-
 }
 </script>
 
