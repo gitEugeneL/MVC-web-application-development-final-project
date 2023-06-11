@@ -99,7 +99,7 @@ export default {
     background-color: #fff;
     padding: 20px;
     border-radius: 10px;
-    max-width: 400px;
+    max-width: 600px;
     transition: all .3s;
 }
 

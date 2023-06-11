@@ -5,20 +5,15 @@ import ManagerPage from "@/components/manager/ManagerPage.vue";
 import PatientRegister from "@/components/auth/PatientRegister.vue";
 import PatientPage from "@/components/patient/PatientPage.vue";
 import NewVisit from "@/components/patient/NewVisit.vue";
+import DoctorPage from "@/components/doctor/DoctorPage.vue";
 
 
 const routes = [
     { path: '/auth', component: AuthPage },
     { path: '/auth/login', component: Login },
     { path: '/auth/patient-register', component: PatientRegister },
-
-
-
-
     { path: '/manager', component: ManagerPage },
-
-
-
+    { path: '/doctor', component: DoctorPage },
     { path: '/patient', component: PatientPage },
     { path: '/patient/new-visit', component: NewVisit }
 

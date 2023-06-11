@@ -7,6 +7,9 @@
             <router-link v-if="this.user && this.role === 'patient'" to="/patient" class="navbar-brand">
                 {{ this.role}}: {{ this.user.firstName }} {{ this.user.lastName }}
             </router-link>
+            <router-link v-if="this.user && this.role === 'doctor'" to="/doctor" class="navbar-brand">
+                {{ this.role}}: {{ this.user.firstName }} {{ this.user.lastName }}
+            </router-link>
             <button
                     class="navbar-toggler"
                     type="button"
@@ -19,24 +22,6 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" :class="{ show: navbarExpanded }">
-<!--                <ul v-if="user" class="navbar-nav mr-auto">-->
-<!--                    <li class="nav-item">-->
-<!--                        <router-link to="/my-auctions" class="nav-link" @click="closeNavbar">My auctions</router-link>-->
-<!--                    </li>-->
-<!--                    <li class="nav-item">-->
-<!--                        <router-link to="/im-participant" class="nav-link" @click="closeNavbar">I'm participate</router-link>-->
-<!--                    </li>-->
-<!--                    <li class="nav-item">-->
-<!--                        <router-link to="/im-winner" class="nav-link" @click="closeNavbar">I'm winner</router-link>-->
-<!--                    </li>-->
-<!--                    <li class="nav-item">-->
-<!--                        <router-link to="/my-purchased-auctions" class="nav-link" @click="closeNavbar">Purchased auctions</router-link>-->
-<!--                    </li>-->
-<!--                    <li class="nav-item">-->
-<!--                        <router-link to="/my-sold-products" class="nav-link" @click="closeNavbar">My sold products</router-link>-->
-<!--                    </li>-->
-<!--                </ul>-->
-
                 <ul v-if="!user" class="navbar-nav ml-auto">
                     <li class="nav-item">
                         <router-link to="/auth" class="nav-link" @click="closeNavbar">Login</router-link>

@@ -48,7 +48,7 @@
                         <div class="col-6 form-group">
                             <label>Confirm password</label>
                             <input v-model="confirmPassword"
-                                   type="text"
+                                   type="password"
                                    class="form-control"
                                    placeholder="confirm password">
                         </div>
