@@ -10,6 +10,125 @@ class GetVisitDto
     private string $endTime;
     private int $patientId;
     private int $doctorId;
+    private string $patientFirstName;
+    private string $patientLastName;
+    private string $patientEmail;
+    private string $patientInsurance;
+    private string $patientPhone;
+    private string $patientPesel;
+    private bool $completed;
+
+    /**
+     * @return bool
+     */
+    public function isCompleted(): bool
+    {
+        return $this->completed;
+    }
+
+    /**
+     * @param bool $completed
+     */
+    public function setCompleted(bool $completed): void
+    {
+        $this->completed = $completed;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPatientPhone(): string
+    {
+        return $this->patientPhone;
+    }
+
+    /**
+     * @param string $patientPhone
+     */
+    public function setPatientPhone(string $patientPhone): void
+    {
+        $this->patientPhone = $patientPhone;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPatientPesel(): string
+    {
+        return $this->patientPesel;
+    }
+
+    /**
+     * @param string $patientPesel
+     */
+    public function setPatientPesel(string $patientPesel): void
+    {
+        $this->patientPesel = $patientPesel;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPatientFirstName(): string
+    {
+        return $this->patientFirstName;
+    }
+
+    /**
+     * @param string $patientFirstName
+     */
+    public function setPatientFirstName(string $patientFirstName): void
+    {
+        $this->patientFirstName = $patientFirstName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPatientLastName(): string
+    {
+        return $this->patientLastName;
+    }
+
+    /**
+     * @param string $patientLastName
+     */
+    public function setPatientLastName(string $patientLastName): void
+    {
+        $this->patientLastName = $patientLastName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPatientEmail(): string
+    {
+        return $this->patientEmail;
+    }
+
+    /**
+     * @param string $patientEmail
+     */
+    public function setPatientEmail(string $patientEmail): void
+    {
+        $this->patientEmail = $patientEmail;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPatientInsurance(): string
+    {
+        return $this->patientInsurance;
+    }
+
+    /**
+     * @param string $patientInsurance
+     */
+    public function setPatientInsurance(string $patientInsurance): void
+    {
+        $this->patientInsurance = $patientInsurance;
+    }
 
     /**
      * @return int

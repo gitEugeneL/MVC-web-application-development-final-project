@@ -71,16 +71,6 @@ class VisitController extends AbstractController
     }
 
 
-    #[IsGranted('ROLE_PATIENT')]
-    #[Route('/show-patient-past', methods: ['GET'])]
-    public function findPastVisitsByAuthPatient(TokenStorageInterface $tokenStorage): JsonResponse
-    {
-        $authPatient = $tokenStorage->getToken()->getUser();
-        $result = $this->visitService->showVisitsByPatient($authPatient, true);
-        return $this->json($result, 200);
-    }
-
-
     #[IsGranted('ROLE_DOCTOR')]
     #[Route('/show-doctor-future', methods: ['GET'])]
     public function findFutureVisitsByAuthDoctor(TokenStorageInterface $tokenStorage): JsonResponse
@@ -91,21 +81,20 @@ class VisitController extends AbstractController
     }
 
 
-    #[IsGranted('ROLE_DOCTOR')]
-    #[Route('/show-doctor-past', methods: ['GET'])]
-    public function findPastVisitsByAuthDoctor(TokenStorageInterface $tokenStorage): JsonResponse
-    {
-        $authDoctor = $tokenStorage->getToken()->getUser();
-        $result = $this->visitService->showVisitsByDoctor($authDoctor, true);
-        return $this->json($result, 200);
-    }
-
-
     #[IsGranted('ROLE_MANAGER')]
     #[Route('/show-manager', methods: ['GET'])]
     public function findFutureVisits(): JsonResponse
     {
         $result = $this->visitService->showVisits();
         return $this->json($result, 200);
+    }
+
+
+    #[IsGranted('ROLE_DOCTOR')]
+    #[Route('/update/{visitId}', methods: ['PATCH'])]
+    public function updateVisit(Request $request): JsonResponse
+    {
+        $this->visitService->updateVisit($request->get('visitId'));
+        return $this->json("success!", 200);
     }
 }

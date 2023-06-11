@@ -25,6 +25,9 @@ class Visit
     #[ORM\Column(type: Types::TIME_MUTABLE)]
     private ?\DateTimeInterface $endTime = null;
 
+    #[ORM\Column]
+    private ?bool $completed = null;
+
     #[ORM\ManyToOne(inversedBy: 'visits')]
     private ?Patient $patient = null;
 
@@ -37,6 +40,22 @@ class Visit
     public function __construct()
     {
         $this->medicalRecords = new ArrayCollection();
+    }
+
+    /**
+     * @return bool|null
+     */
+    public function getCompleted(): ?bool
+    {
+        return $this->completed;
+    }
+
+    /**
+     * @param bool|null $completed
+     */
+    public function setCompleted(?bool $completed): void
+    {
+        $this->completed = $completed;
     }
 
     public function getId(): ?int
@@ -52,17 +71,6 @@ class Visit
     public function setDate(\DateTimeInterface $date): self
     {
         $this->date = $date;
-        return $this;
-    }
-
-    public function getTime(): ?\DateTimeInterface
-    {
-        return $this->time;
-    }
-
-    public function setTime(\DateTimeInterface $time): self
-    {
-        $this->time = $time;
         return $this;
     }
 
@@ -147,6 +155,4 @@ class Visit
     {
         $this->endTime = $endTime;
     }
-
-
 }

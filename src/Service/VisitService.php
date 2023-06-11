@@ -80,6 +80,7 @@ class VisitService
         $visit->setEndTime($endTime);
         $visit->setPatient($patient);
         $visit->setDoctor($doctor);
+        $visit->setCompleted(false);
 
         $this->visitRepository->save($visit, true);
 
@@ -87,7 +88,7 @@ class VisitService
     }
 
 
-    public function showVisitsByPatient(UserInterface $authPatient, bool $past = false): array
+    public function showVisitsByPatient(UserInterface $authPatient): array
     {
         $patient = $this->patientRepository->findOneBy(["authUser" => $this->userRepository
             ->findOneBy(['email' => $authPatient->getUserIdentifier()])]);
@@ -95,11 +96,11 @@ class VisitService
             $this->apiException->exception("This Patient doesn't exist", 422);
 
         $visits = $this->visitRepository->findBy(['patient' => $patient]);
-        return $this->findVisits($visits, $past);
+        return $this->findVisits($visits);
     }
 
 
-    public function showVisitsByDoctor(UserInterface $authDoctor, bool $past = false): array
+    public function showVisitsByDoctor(UserInterface $authDoctor): array
     {
         $doctor = $this->doctorRepository->findOneBy(["authUser" => $this->userRepository
             ->findOneBy(['email' => $authDoctor->getUserIdentifier()])]);
@@ -108,28 +109,33 @@ class VisitService
             $this->apiException->exception("This Doctor doesn't exist", 422);
 
         $visits = $this->visitRepository->findBy(['doctor' => $doctor]);
-        return $this->findVisits($visits, $past);
+        return $this->findVisits($visits);
     }
 
 
-    public function showVisits(bool $past = false): array
+    public function showVisits(): array
     {
         $visits = $this->visitRepository->findAll();
-        return $this->findVisits($visits, $past);
+        return $this->findVisits($visits);
     }
 
 
-    private function findVisits(array $visits, bool $past): array
+    public function updateVisit(int $visitId): void
     {
-        $futureVisits = array_filter($visits, function ($visit) use ($past) {
-            $today = new DateTime();
-            return $past ? ($visit->getDate() < $today) : ($visit->getDate() >= $today);
-        });
+        $visit = $this->visitRepository->find($visitId);
+        if(!$visit)
+            $this->apiException->exception("This visit doesn't exist", 422);
 
+        $visit->setCompleted(true);
+        $this->visitRepository->save($visit, true);
+    }
+
+
+    private function findVisits(array $visits): array
+    {
         $visitsDTOs = [];
-        foreach ($futureVisits as $visit)
+        foreach ($visits as $visit)
             $visitsDTOs[] = $this->createGetVisitDto($visit);
-
         return $visitsDTOs;
     }
 
@@ -139,14 +145,22 @@ class VisitService
         $day = $visit->getDate()->format('Y-m-d');
         $startTIme = $visit->getStartTime()->format('H:i');
         $endTime = $visit->getEndTime()->format('H:i');
+        $patient = $visit->getPatient();
 
         $dto = new GetVisitDto();
         $dto->setId($visit->getId());
         $dto->setDay($day);
         $dto->setStartTime($startTIme);
         $dto->setEndTime($endTime);
-        $dto->setPatientId($visit->getPatient()->getId());
+        $dto->setPatientId($patient->getId());
         $dto->setDoctorId($visit->getDoctor()->getId());
+        $dto->setPatientFirstName($patient->getFirstName());
+        $dto->setPatientLastName($patient->getLastName());
+        $dto->setPatientEmail($patient->getAuthUser()->getEmail());
+        $dto->setPatientInsurance($patient->getInsurance());
+        $dto->setPatientPhone($patient->getPhone());
+        $dto->setPatientPesel($patient->getPesel());
+        $dto->setCompleted($visit->getCompleted());
         return $dto;
     }
 }
