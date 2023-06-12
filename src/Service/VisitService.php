@@ -4,6 +4,7 @@ namespace App\Service;
 
 use App\Entity\Visit;
 use App\Exception\ApiException;
+use App\Mapper\VisitMapper;
 use App\Repository\DoctorRepository;
 use App\Repository\PatientRepository;
 use App\Repository\UserRepository;
@@ -21,15 +22,17 @@ class VisitService
     private PatientRepository $patientRepository;
     private UserRepository $userRepository;
     private ApiException $apiException;
+    private VisitMapper $visitMapper;
     public function __construct(VisitRepository $visitRepository, DoctorRepository $doctorRepository,
                                 PatientRepository $patientRepository, UserRepository $userRepository,
-                                ApiException $apiException)
+                                VisitMapper $visitMapper, ApiException $apiException)
     {
         $this->userRepository = $userRepository;
         $this->patientRepository = $patientRepository;
         $this->doctorRepository = $doctorRepository;
         $this->visitRepository = $visitRepository;
         $this->apiException = $apiException;
+        $this->visitMapper = $visitMapper;
     }
 
 
@@ -84,7 +87,7 @@ class VisitService
 
         $this->visitRepository->save($visit, true);
 
-        return $this->createGetVisitDto($visit);
+        return $this->visitMapper->createGetVisitDto($visit);
     }
 
 
@@ -135,32 +138,7 @@ class VisitService
     {
         $visitsDTOs = [];
         foreach ($visits as $visit)
-            $visitsDTOs[] = $this->createGetVisitDto($visit);
+            $visitsDTOs[] = $this->visitMapper->createGetVisitDto($visit);
         return $visitsDTOs;
-    }
-
-
-    private function createGetVisitDto(Visit $visit): GetVisitDto
-    {
-        $day = $visit->getDate()->format('Y-m-d');
-        $startTIme = $visit->getStartTime()->format('H:i');
-        $endTime = $visit->getEndTime()->format('H:i');
-        $patient = $visit->getPatient();
-
-        $dto = new GetVisitDto();
-        $dto->setId($visit->getId());
-        $dto->setDay($day);
-        $dto->setStartTime($startTIme);
-        $dto->setEndTime($endTime);
-        $dto->setPatientId($patient->getId());
-        $dto->setDoctorId($visit->getDoctor()->getId());
-        $dto->setPatientFirstName($patient->getFirstName());
-        $dto->setPatientLastName($patient->getLastName());
-        $dto->setPatientEmail($patient->getAuthUser()->getEmail());
-        $dto->setPatientInsurance($patient->getInsurance());
-        $dto->setPatientPhone($patient->getPhone());
-        $dto->setPatientPesel($patient->getPesel());
-        $dto->setCompleted($visit->getCompleted());
-        return $dto;
     }
 }

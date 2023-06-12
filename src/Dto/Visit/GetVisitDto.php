@@ -16,7 +16,75 @@ class GetVisitDto
     private string $patientInsurance;
     private string $patientPhone;
     private string $patientPesel;
+    private string $doctorFirstName;
+    private string $doctorLastName;
+    private string $doctorEmail;
+    private string $doctorPhone;
     private bool $completed;
+
+    /**
+     * @return string
+     */
+    public function getDoctorFirstName(): string
+    {
+        return $this->doctorFirstName;
+    }
+
+    /**
+     * @param string $doctorFirstName
+     */
+    public function setDoctorFirstName(string $doctorFirstName): void
+    {
+        $this->doctorFirstName = $doctorFirstName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDoctorLastName(): string
+    {
+        return $this->doctorLastName;
+    }
+
+    /**
+     * @param string $doctorLastName
+     */
+    public function setDoctorLastName(string $doctorLastName): void
+    {
+        $this->doctorLastName = $doctorLastName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDoctorEmail(): string
+    {
+        return $this->doctorEmail;
+    }
+
+    /**
+     * @param string $doctorEmail
+     */
+    public function setDoctorEmail(string $doctorEmail): void
+    {
+        $this->doctorEmail = $doctorEmail;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDoctorPhone(): string
+    {
+        return $this->doctorPhone;
+    }
+
+    /**
+     * @param string $doctorPhone
+     */
+    public function setDoctorPhone(string $doctorPhone): void
+    {
+        $this->doctorPhone = $doctorPhone;
+    }
 
     /**
      * @return bool

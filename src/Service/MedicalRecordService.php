@@ -4,6 +4,7 @@ namespace App\Service;
 
 use App\Entity\MedicalRecord;
 use App\Exception\ApiException;
+use App\Mapper\MedicalRecordMapper;
 use App\MedicalRecord\CreateMedicalRecordDto;
 use App\MedicalRecord\GetMedicalRecordDto;
 use App\Repository\DoctorRepository;
@@ -21,9 +22,11 @@ class MedicalRecordService
     private PatientRepository $patientRepository;
     private VisitRepository $visitRepository;
     private ApiException $apiException;
+    private MedicalRecordMapper $medicalRecordMapper;
     public function __construct(PatientRepository $patientRepository, VisitRepository $visitRepository,
                                 UserRepository $userRepository, DoctorRepository $doctorRepository,
-                                MedicalRecordRepository $medicalRecordRepository, ApiException $apiException)
+                                MedicalRecordRepository $medicalRecordRepository, MedicalRecordMapper $medicalRecordMapper,
+                                ApiException $apiException)
     {
         $this->visitRepository = $visitRepository;
         $this->patientRepository = $patientRepository;
@@ -31,6 +34,7 @@ class MedicalRecordService
         $this->doctorRepository = $doctorRepository;
         $this->medicalRecordRepository = $medicalRecordRepository;
         $this->apiException = $apiException;
+        $this->medicalRecordMapper = $medicalRecordMapper;
     }
 
 
@@ -65,7 +69,7 @@ class MedicalRecordService
 
         $this->medicalRecordRepository->save($medicalRecord, true);
 
-        return $this->createGetMedicalRecordDto($medicalRecord);
+        return $this->medicalRecordMapper->createGetMedicalRecordDto($medicalRecord);
     }
 
 
@@ -81,32 +85,9 @@ class MedicalRecordService
 
         $medicalRecordsDTOs = [];
         foreach ($medicalRecords as $record) {
-            $medicalRecordsDTOs[] = $this->createGetMedicalRecordDto($record);
+            $medicalRecordsDTOs[] = $this->medicalRecordMapper->createGetMedicalRecordDto($record);
         }
         return $medicalRecordsDTOs;
-    }
-
-
-    private function createGetMedicalRecordDto(MedicalRecord $medicalRecord): GetMedicalRecordDto
-    {
-        $doctor = $medicalRecord->getDoctor();
-        $patient = $medicalRecord->getPatient();
-        $visit = $medicalRecord->getVisit();
-
-        $dto = new GetMedicalRecordDto();
-        $dto->setId($medicalRecord->getId());
-        $dto->setName($medicalRecord->getName());
-        $dto->setDescription($medicalRecord->getDescription());
-        $dto->setDate($visit->getDate()->format('Y-m-d'));
-        $dto->setStartTime($visit->getStartTime()->format('H:i'));
-        $dto->setEndTime($visit->getEndTime()->format('H:i'));
-        $dto->setPatientId($patient->getId());
-        $dto->setDoctorId($doctor->getId());
-        $dto->setPatientFirstName($patient->getFirstName());
-        $dto->setPatientLastName($patient->getLastName());
-        $dto->setDoctorFirstName($doctor->getFirstName());
-        $dto->setDoctorLastName($doctor->getLastName());
-        return $dto;
     }
 }
 

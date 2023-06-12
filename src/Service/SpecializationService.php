@@ -4,6 +4,7 @@ namespace App\Service;
 
 use App\Entity\Specialization;
 use App\Exception\ApiException;
+use App\Mapper\SpecializationMapper;
 use App\Repository\SpecializationRepository;
 use App\Specialization\CreateSpecializationDto;
 use App\Specialization\GetSpecializationDto;
@@ -12,10 +13,13 @@ class SpecializationService
 {
     private SpecializationRepository $specializationRepository;
     private ApiException $apiException;
-    public function __construct(SpecializationRepository $specializationRepository, ApiException $apiException)
+    private SpecializationMapper $specializationMapper;
+    public function __construct(SpecializationRepository $specializationRepository,
+                                SpecializationMapper $specializationMapper, ApiException $apiException)
     {
         $this->specializationRepository = $specializationRepository;
         $this->apiException = $apiException;
+        $this->specializationMapper = $specializationMapper;
     }
 
 
@@ -30,7 +34,7 @@ class SpecializationService
 
         $this->specializationRepository->save($specialization, true);
 
-        return $this->createGetSpecializationDto($specialization);
+        return $this->specializationMapper->createGetSpecializationDto($specialization);
     }
 
 
@@ -40,21 +44,8 @@ class SpecializationService
         $specializationDTOs = [];
 
         foreach ($specializations as $specialization) {
-            $specializationDTOs[] = $this->createGetSpecializationDto($specialization);
+            $specializationDTOs[] = $this->specializationMapper->createGetSpecializationDto($specialization);
         }
         return $specializationDTOs;
     }
-
-
-    private function createGetSpecializationDto(Specialization $specialization): GetSpecializationDto
-    {
-        $dto = new GetSpecializationDto();
-        $dto->setId($specialization->getId());
-        $dto->setName($specialization->getName());
-        return $dto;
-    }
-
-
-
-
 }

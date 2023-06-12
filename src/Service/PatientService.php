@@ -5,6 +5,7 @@ namespace App\Service;
 use App\Entity\Patient;
 use App\Entity\User;
 use App\Exception\ApiException;
+use App\Mapper\PatientMapper;
 use App\Patient\CreatePatientDto;
 use App\Patient\GetPatientDto;
 use App\Repository\PatientRepository;
@@ -17,12 +18,14 @@ class PatientService
     private UserRepository $userRepository;
     private PatientRepository $patientRepository;
     private ApiException $apiException;
+    private PatientMapper $patientMapper;
     public function __construct(UserRepository $userRepository, PatientRepository $patientRepository,
-                                ApiException $apiException)
+                                PatientMapper $patientMapper, ApiException $apiException)
     {
         $this->patientRepository = $patientRepository;
         $this->userRepository = $userRepository;
         $this->apiException = $apiException;
+        $this->patientMapper = $patientMapper;
     }
 
     public function createPatient(CreatePatientDto $dto): GetPatientDto
@@ -44,7 +47,7 @@ class PatientService
         $patient->setPesel($dto->getPesel());
 
         $this->patientRepository->save($patient, true);
-        return $this->createGetPatientDto($patient);
+        return $this->patientMapper->createGetPatientDto($patient);
     }
 
     public function showPatients(): array
@@ -52,7 +55,7 @@ class PatientService
         $patients = $this->patientRepository->findAll();
         $patientsDTOs = [];
         foreach ($patients as $patient) {
-            $patientsDTOs[] = $this->createGetPatientDto($patient);
+            $patientsDTOs[] = $this->patientMapper->createGetPatientDto($patient);
         }
         return $patientsDTOs;
     }
@@ -66,21 +69,6 @@ class PatientService
         if (!$patient)
             $this->apiException->exception("This Patient doesn't exist", 422);
 
-        return $this->createGetPatientDto($patient);
-    }
-
-
-    private function createGetPatientDto(Patient $patient): GetPatientDto
-    {
-        $dto = new GetPatientDto();
-        $dto->setId($patient->getId());
-        $dto->setFirstName($patient->getFirstName());
-        $dto->setLastName($patient->getLastName());
-        $dto->setDateOfBirth($patient->getDateOfBirth());
-        $dto->setPesel($patient->getPesel());
-        $dto->setPhone($patient->getPhone());
-        $dto->setInsurance($patient->getInsurance());
-        $dto->setEmail($patient->getAuthUser()->getEmail());
-        return $dto;
+        return $this->patientMapper->createGetPatientDto($patient);
     }
 }

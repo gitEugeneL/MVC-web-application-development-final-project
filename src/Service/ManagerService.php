@@ -7,9 +7,9 @@ use App\Dto\GetManagerDto;
 use App\Entity\Manager;
 use App\Entity\User;
 use App\Exception\ApiException;
+use App\Mapper\ManagerMapper;
 use App\Repository\ManagerRepository;
 use App\Repository\UserRepository;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 
@@ -18,12 +18,14 @@ readonly class ManagerService
     private UserRepository $userRepository;
     private ManagerRepository $managerRepository;
     private ApiException $apiException;
+    private ManagerMapper $managerMapper;
     public function __construct(UserRepository $userRepository, ManagerRepository $managerRepository,
-                                ApiException $apiException)
+                                ManagerMapper $managerMapper, ApiException $apiException)
     {
         $this->userRepository = $userRepository;
         $this->managerRepository = $managerRepository;
         $this->apiException = $apiException;
+        $this->managerMapper = $managerMapper;
     }
 
     public function createManager(CreateManagerDto $dto): GetManagerDto
@@ -42,9 +44,7 @@ readonly class ManagerService
                 ->setRoles(["ROLE_MANAGER"]));
 
         $this->managerRepository->save($manager, true);
-
-
-        return $this->createManagerDto($manager);
+        return $this->managerMapper->createManagerDto($manager);
     }
 
 
@@ -57,19 +57,6 @@ readonly class ManagerService
         if (!$manager)
             $this->apiException->exception("This Manager doesn't exist", 422);
 
-        return $this->createManagerDto($manager);
+        return $this->managerMapper->createManagerDto($manager);
     }
-
-
-    private function createManagerDto(Manager $manager): GetManagerDto
-    {
-        $dto = new GetManagerDto();
-        $dto->setId($manager->getId());
-        $dto->setFirstName($manager->getFirstName());
-        $dto->setLastName($manager->getLastName());
-        $dto->setPhone($manager->getPhone());
-        $dto->setEmail($manager->getAuthUser()->getEmail());
-        return $dto;
-    }
-
 }

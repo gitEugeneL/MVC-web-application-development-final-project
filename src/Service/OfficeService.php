@@ -4,6 +4,7 @@ namespace App\Service;
 
 use App\Entity\Office;
 use App\Exception\ApiException;
+use App\Mapper\OfficeMapper;
 use App\Office\CreateOfficeDto;
 use App\Office\GetOfficeDto;
 use App\Repository\OfficeRepository;
@@ -12,10 +13,13 @@ class OfficeService
 {
     private OfficeRepository $officeRepository;
     private ApiException $apiException;
-    public function __construct(OfficeRepository $officeRepository, ApiException $apiException)
+    private OfficeMapper $officeMapper;
+    public function __construct(OfficeRepository $officeRepository,
+                                ApiException $apiException, OfficeMapper $officeMapper)
     {
         $this->officeRepository = $officeRepository;
         $this->apiException = $apiException;
+        $this->officeMapper = $officeMapper;
     }
 
 
@@ -30,7 +34,7 @@ class OfficeService
         $office->setIsAvailable(false);
 
         $this->officeRepository->save($office, true);
-        return $this->createGetOfficeDto($office);
+        return $this->officeMapper->createGetOfficeDto($office);
     }
 
 
@@ -40,7 +44,7 @@ class OfficeService
         $officesDTOs = [];
 
         foreach ($offices as $office) {
-            $officesDTOs[] = $this->createGetOfficeDto($office);
+            $officesDTOs[] = $this->officeMapper->createGetOfficeDto($office);
         }
         return $officesDTOs;
     }
@@ -54,17 +58,6 @@ class OfficeService
 
         $office->setIsAvailable(!$office->getIsAvailable());
         $this->officeRepository->save($office, true);
-        return $this->createGetOfficeDto($office);
-    }
-
-
-    private function createGetOfficeDto(Office $office): GetOfficeDto
-    {
-        $dto = new GetOfficeDto();
-        $dto->setId($office->getId());
-        $dto->setName($office->getName());
-        $dto->setNumber($office->getNumber());
-        $dto->setIsAvailable($office->getIsAvailable());
-        return $dto;
+        return $this->officeMapper->createGetOfficeDto($office);
     }
 }
