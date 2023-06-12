@@ -6,6 +6,8 @@ import PatientRegister from "@/components/auth/PatientRegister.vue";
 import PatientPage from "@/components/patient/PatientPage.vue";
 import NewVisit from "@/components/patient/NewVisit.vue";
 import DoctorPage from "@/components/doctor/DoctorPage.vue";
+import PatientVisits from "@/components/patient/PatientVisits.vue";
+import MedicalRecords from "@/components/patient/MedicalRecords.vue";
 
 
 const routes = [
@@ -15,9 +17,9 @@ const routes = [
     { path: '/manager', component: ManagerPage },
     { path: '/doctor', component: DoctorPage },
     { path: '/patient', component: PatientPage },
-    { path: '/patient/new-visit', component: NewVisit }
-
-
+    { path: '/patient/new-visit', component: NewVisit },
+    { path: '/patient/visits', component: PatientVisits },
+    { path: '/patient/medical-records', component: MedicalRecords }
 ]
 
 

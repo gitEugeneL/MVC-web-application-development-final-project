@@ -68,7 +68,7 @@ export default {
             });
                 if (response.status === 201) {
                     console.log(true);
-                    await router.push('patient/future-visits');
+                    await router.push('/patient');
                 }
             } catch (error) {
                 this.error = error.response.data.detail;

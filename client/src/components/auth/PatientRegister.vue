@@ -100,7 +100,7 @@ export default {
                 firstName: this.firstName,
                 lastName: this.lastName,
                 dateOfBirth: this.dateOfBirth,
-                pesel: this.pesel,
+                pesel: this.pesel.toString(),
                 phone: this.phone,
                 insurance: this.insurance,
                 password: this.password,
