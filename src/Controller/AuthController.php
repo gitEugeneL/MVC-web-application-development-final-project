@@ -8,8 +8,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
+use OpenApi\Attributes as OA;
 
 
+#[OA\Tag(name: 'auth')]
 class AuthController extends AbstractController
 {
     #[Route('/login', name: 'app_auth_login', methods:['POST'])]

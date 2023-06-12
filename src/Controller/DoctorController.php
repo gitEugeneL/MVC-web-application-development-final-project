@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use OpenApi\Attributes as OA;
 use App\Doctor\CreateDoctorDto;
 use App\Doctor\UpdateDoctorSpecializationDto;
 use App\Service\DoctorService;
@@ -16,6 +17,7 @@ use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 
+#[OA\Tag(name: 'doctor')]
 #[Route('/doctor')]
 class DoctorController extends AbstractController
 {

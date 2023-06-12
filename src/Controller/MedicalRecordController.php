@@ -12,7 +12,10 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use OpenApi\Attributes as OA;
 
+
+#[OA\Tag(name: 'medicalRecord')]
 #[Route('/record')]
 class MedicalRecordController extends AbstractController
 {

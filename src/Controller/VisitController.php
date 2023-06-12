@@ -13,8 +13,10 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use OpenApi\Attributes as OA;
 
 
+#[OA\Tag(name: 'visit')]
 #[Route('/visit')]
 class VisitController extends AbstractController
 {
@@ -63,7 +65,7 @@ class VisitController extends AbstractController
 
     #[IsGranted('ROLE_PATIENT')]
     #[Route('/show-patient-future', methods: ['GET'])]
-    public function findFutureVisitsByAuthPatient(TokenStorageInterface $tokenStorage): JsonResponse
+    public function findVisitsByAuthPatient(TokenStorageInterface $tokenStorage): JsonResponse
     {
         $authPatient = $tokenStorage->getToken()->getUser();
         $result = $this->visitService->showVisitsByPatient($authPatient);
@@ -73,7 +75,7 @@ class VisitController extends AbstractController
 
     #[IsGranted('ROLE_DOCTOR')]
     #[Route('/show-doctor-future', methods: ['GET'])]
-    public function findFutureVisitsByAuthDoctor(TokenStorageInterface $tokenStorage): JsonResponse
+    public function findVisitsByAuthDoctor(TokenStorageInterface $tokenStorage): JsonResponse
     {
         $authDoctor = $tokenStorage->getToken()->getUser();
         $result = $this->visitService->showVisitsByDoctor($authDoctor);
@@ -83,7 +85,7 @@ class VisitController extends AbstractController
 
     #[IsGranted('ROLE_MANAGER')]
     #[Route('/show-manager', methods: ['GET'])]
-    public function findFutureVisits(): JsonResponse
+    public function findVisits(): JsonResponse
     {
         $result = $this->visitService->showVisits();
         return $this->json($result, 200);

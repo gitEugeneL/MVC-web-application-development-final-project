@@ -12,8 +12,10 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\ExpressionLanguage\Expression;
+use OpenApi\Attributes as OA;
 
 
+#[OA\Tag(name: 'specialization')]
 #[Route('/specialization')]
 class SpecializationController extends AbstractController
 {

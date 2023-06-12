@@ -8,6 +8,7 @@ use App\Doctor\UpdateDoctorSpecializationDto;
 use App\Entity\Doctor;
 use App\Entity\User;
 use App\Exception\ApiException;
+use App\Mapper\DoctorMapper;
 use App\Repository\DoctorRepository;
 use App\Repository\SpecializationRepository;
 use App\Repository\UserRepository;
@@ -18,14 +19,17 @@ class DoctorService
     private UserRepository $userRepository;
     private DoctorRepository $doctorRepository;
     private SpecializationRepository $specializationRepository;
+    private DoctorMapper $doctorMapper;
     private ApiException $apiException;
     public function __construct(UserRepository $userRepository, DoctorRepository $doctorRepository,
-                                SpecializationRepository $specializationRepository, ApiException $apiException)
+                                SpecializationRepository $specializationRepository, DoctorMapper $doctorMapper,
+                                ApiException $apiException)
     {
         $this->doctorRepository = $doctorRepository;
         $this->userRepository = $userRepository;
         $this->apiException = $apiException;
         $this->specializationRepository = $specializationRepository;
+        $this->doctorMapper = $doctorMapper;
     }
 
     public function createDoctor(CreateDoctorDto $dto): GetDoctorDto
@@ -59,7 +63,7 @@ class DoctorService
 
         $this->doctorRepository->save($doctor, true);
 
-        return $this->createGetDoctorDto($doctor);
+        return $this->doctorMapper->createGetDoctorDto($doctor);
     }
 
 
@@ -68,7 +72,7 @@ class DoctorService
         $doctors = $this->doctorRepository->findAll();
         $doctorsDTOs = [];
         foreach ($doctors as $doctor) {
-            $doctorsDTOs[] = $this->createGetDoctorDto($doctor);
+            $doctorsDTOs[] = $this->doctorMapper->createGetDoctorDto($doctor);
         }
         return $doctorsDTOs;
     }
@@ -83,7 +87,7 @@ class DoctorService
         if(!$doctor)
             $this->apiException->exception("This Doctor doesn't exist", 422);
 
-        return $this->createGetDoctorDto($doctor);
+        return $this->doctorMapper->createGetDoctorDto($doctor);
     }
 
 
@@ -96,7 +100,7 @@ class DoctorService
         $doctors = $specialization->getDoctors();
         $doctorsDTOs = [];
         foreach ($doctors as $doctor) {
-            $doctorsDTOs[] = $this->createGetDoctorDto($doctor);
+            $doctorsDTOs[] = $this->doctorMapper->createGetDoctorDto($doctor);
         }
         return $doctorsDTOs;
     }
@@ -127,25 +131,6 @@ class DoctorService
             $doctor->removeSpecialization($specialization);
         }
         $this->doctorRepository->save($doctor, true);
-        return $this->createGetDoctorDto($doctor);
-    }
-
-
-    private function createGetDoctorDto(Doctor $doctor): GetDoctorDto
-    {
-        $dto = new GetDoctorDto();
-        $dto->setId($doctor->getId());
-        $dto->setFirstName($doctor->getFirstName());
-        $dto->setLastName($doctor->getLastName());
-        $dto->setEmail($doctor->getAuthUser()->getEmail());
-        $dto->setPhone($doctor->getPhone());
-
-        $specializations = [];
-        foreach ($doctor->getSpecializations() as $specialization) {
-            $specializations[] = $specialization->getName();
-        }
-        $dto->setSpecialization($specializations);
-
-        return $dto;
+        return $this->doctorMapper->createGetDoctorDto($doctor);
     }
 }
