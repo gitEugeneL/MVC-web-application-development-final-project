@@ -33,8 +33,7 @@ Final project on the subject of **MVC-web-application-development**.
 
 
 ## Database design
-
-![Database design](https://github.com/gitEugeneL/Healthcare-CRM-final-project/raw/master/presentation/dbDesign.png)
+![Database design](https://raw.githubusercontent.com/gitEugeneL/Healthcare-CRM-final-project/main/presentation/dbDesign.png?token=GHSAT0AAAAAACAH5ZKHTCIJ7FWNDDFQQ4QWZEHKMIQ)
 
 
 ## Links
