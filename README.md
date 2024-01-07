@@ -1,4 +1,4 @@
-# Healthcare-CRM-final-project
+# MVC-web-application-development-final-project
 **4th semester.**
 
 Final project on the subject of **MVC-web-application-development**.
